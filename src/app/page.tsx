@@ -1,103 +1,248 @@
-import Image from "next/image";
+'use client';
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Form,
+  FormControl, FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns/fp";
+import { CalendarIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
+  const form = useForm({});
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <h1 className="text-4xl font-bold">Welcome to Mohotsav</h1>
+      <p className="mt-4">Celebrating culture and community.</p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <Form {...form}>
+        <div className="w-1/3 mt-8 space-y-4">
+          <FormField
+            control={form.control}
+            name="mandalOfficialName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mandal Official Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Mandal Official Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="popularName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Popular Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Popular Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="pandalAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Pandal Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Pandal Address" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="googleMapsLink"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Google Maps Link</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Google Maps Link" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="yearEstablished"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Year Established</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter Year Established" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="mandalHistory"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mandal History</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Mandal History" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="dob"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date of birth</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      captionLayout="dropdown"
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="aagmanStartLocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Aagman Start Location</FormLabel>
+                <FormControl>
+                  <Input type="time" placeholder="Enter Aagman Start Location" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="aagmanStartLocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Aagman Start Location</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Aagman Start Location" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="primaryContactName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Primary Contact Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Primary Contact Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="primaryContactMobile"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Primary Contact Mobile</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Primary Contact Mobile" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="publicEnquiryNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Public Enquiry Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Public Enquiry Number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="websiteOrSocialLinks"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Website or Social Links</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Website or Social Links" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="authorizingPerson"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Authorizing Person</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Authorizing Person" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </Form>
     </div>
   );
 }
