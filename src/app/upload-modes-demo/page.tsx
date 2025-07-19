@@ -11,8 +11,8 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { SpacesProvider } from '@/contexts/SpacesContext';
-import { UploadResult } from '@/lib/digitalocean-spaces';
+import { BytescaleProvider } from '@/contexts/BytescaleContext';
+import { BytescaleUploadResult } from '@/lib/bytescale';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -33,9 +33,9 @@ function UploadModesDemo() {
         }
     });
 
-    const [uploadResults, setUploadResults] = useState<UploadResult[]>([]);
+    const [uploadResults, setUploadResults] = useState<BytescaleUploadResult[]>([]);
 
-    const handleUploadComplete = (results: UploadResult[]) => {
+    const handleUploadComplete = (results: BytescaleUploadResult[]) => {
         setUploadResults(prev => [...prev, ...results]);
         console.log('Upload complete:', results);
     };
@@ -87,9 +87,8 @@ function UploadModesDemo() {
                                                     accept={{
                                                         'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'],
                                                     }}
-                                                    enableSpacesUpload={true}
-                                                    bucketName="finrm-spaces"
-                                                    folderName="newfin/mahostav-uploads/profiles"
+                                                    enableBytescaleUpload={true}
+                                                    folderName="mahostav-uploads/profiles"
                                                     onUploadComplete={handleUploadComplete}
                                                     onUploadError={handleUploadError}
                                                 />
@@ -127,9 +126,8 @@ function UploadModesDemo() {
                                                     accept={{
                                                         'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'],
                                                     }}
-                                                    enableSpacesUpload={true}
-                                                    bucketName="finrm-spaces"
-                                                    folderName="newfin/mahostav-uploads/gallery"
+                                                    enableBytescaleUpload={true}
+                                                    folderName="mahostav-uploads/gallery"
                                                     onUploadComplete={handleUploadComplete}
                                                     onUploadError={handleUploadError}
                                                 />
@@ -167,9 +165,8 @@ function UploadModesDemo() {
                                                     accept={{
                                                         'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp', '.tiff'],
                                                     }}
-                                                    enableSpacesUpload={true}
-                                                    bucketName="finrm-spaces"
-                                                    folderName="newfin/mahostav-uploads/hero-images"
+                                                    enableBytescaleUpload={true}
+                                                    folderName="mahostav-uploads/hero-images"
                                                     onUploadComplete={handleUploadComplete}
                                                     onUploadError={handleUploadError}
                                                 />
@@ -210,9 +207,8 @@ function UploadModesDemo() {
                                                         'application/msword': ['.doc'],
                                                         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
                                                     }}
-                                                    enableSpacesUpload={true}
-                                                    bucketName="finrm-spaces"
-                                                    folderName="newfin/mahostav-uploads/documents"
+                                                    enableBytescaleUpload={true}
+                                                    folderName="mahostav-uploads/documents"
                                                     onUploadComplete={handleUploadComplete}
                                                     onUploadError={handleUploadError}
                                                 />
@@ -328,8 +324,8 @@ function UploadModesDemo() {
 
 export default function UploadModesPage() {
     return (
-        <SpacesProvider>
+        <BytescaleProvider>
             <UploadModesDemo />
-        </SpacesProvider>
+        </BytescaleProvider>
     );
 }
