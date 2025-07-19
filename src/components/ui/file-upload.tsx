@@ -149,7 +149,7 @@ export function FileUpload({
                 )}
             >
                 <input {...getInputProps()} />
-                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                <Upload className="mx-auto h-12 w-12 text-primary" />
                 <p className="mt-2 text-sm text-gray-600">
                     {isDragActive ? (
                         'Drop the files here...'
@@ -158,12 +158,12 @@ export function FileUpload({
                             {maxFiles === 1 ? (
                                 <>
                                     Drag & drop a single image here, or{' '}
-                                    <span className="text-blue-600 font-medium">browse</span>
+                                    <span className="text-primary font-medium">browse</span>
                                 </>
                             ) : (
                                 <>
                                     Drag & drop multiple images here, or{' '}
-                                    <span className="text-blue-600 font-medium">browse</span>
+                                    <span className="text-primary font-medium">browse</span>
                                 </>
                             )}
                         </>
