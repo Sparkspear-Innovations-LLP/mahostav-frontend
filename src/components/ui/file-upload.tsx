@@ -1,7 +1,7 @@
 'use client';
 
-import { useSpacesUpload } from '@/hooks/useSpacesUpload';
-import { UploadResult } from '@/lib/digitalocean-spaces';
+import { useBytescaleUpload } from '@/hooks/useBytescaleUpload';
+import { BytescaleUploadResult } from '@/lib/bytescale';
 import { cn } from '@/lib/utils';
 import { CheckCircle, Cloud, File, Upload, X } from 'lucide-react';
 import Image from 'next/image';
@@ -17,12 +17,10 @@ interface FileUploadProps {
     accept?: Record<string, string[]>;
     disabled?: boolean;
     className?: string;
-    // DigitalOcean Spaces configuration
-    enableSpacesUpload?: boolean;
-    bucketName?: string;
+    // Bytescale configuration
+    enableBytescaleUpload?: boolean;
     folderName?: string;
-    makePublic?: boolean;
-    onUploadComplete?: (results: UploadResult[]) => void;
+    onUploadComplete?: (results: BytescaleUploadResult[]) => void;
     onUploadError?: (error: string) => void;
 }
 
@@ -37,25 +35,21 @@ export function FileUpload({
     },
     disabled = false,
     className,
-    enableSpacesUpload = false,
-    bucketName = '',
+    enableBytescaleUpload = false,
     folderName = '',
-    makePublic = true,
     onUploadComplete,
     onUploadError,
 }: FileUploadProps) {
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
-    // DigitalOcean Spaces upload hook
+    // Bytescale upload hook
     const {
         uploading,
         uploadProgress,
         uploadMultipleFiles,
         uploadedFiles,
-    } = useSpacesUpload({
-        bucketName: bucketName || 'default-bucket',
-        folderName,
-        makePublic,
+    } = useBytescaleUpload({
+        folder: folderName || 'uploads',
         onUploadComplete: (results) => {
             onUploadComplete?.(results);
         },
@@ -97,17 +91,17 @@ export function FileUpload({
             // Update local files first
             onChange(filesToAdd);
 
-            // Upload to DigitalOcean Spaces if enabled
-            if (enableSpacesUpload && bucketName) {
+            // Upload to Bytescale if enabled
+            if (enableBytescaleUpload) {
                 try {
                     await uploadMultipleFiles(acceptedFiles);
                 } catch (error) {
-                    console.error('Failed to upload files to Spaces:', error);
+                    console.error('Failed to upload files to Bytescale:', error);
                     onUploadError?.(error instanceof Error ? error.message : 'Upload failed');
                 }
             }
         },
-        [onChange, value, maxFiles, enableSpacesUpload, bucketName, uploadMultipleFiles, onUploadError]
+        [onChange, value, maxFiles, enableBytescaleUpload, uploadMultipleFiles, onUploadError]
     );
 
     const { getRootProps, getInputProps, isDragActive, fileRejections } =
@@ -143,11 +137,11 @@ export function FileUpload({
     };
 
     return (
-        <div className={cn('w-auto', className)}>
+        <div className={cn('w-full max-w-full overflow-hidden', className)}>
             <div
                 {...getRootProps()}
                 className={cn(
-                    'border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer transition-colors',
+                    'border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer transition-colors w-full',
                     'hover:border-gray-400 focus:outline-none focus:ring-2 bg-white focus:ring-offset-2 focus:ring-blue-500',
                     isDragActive && 'border-blue-400 bg-blue-50',
                     disabled && 'opacity-50 cursor-not-allowed',
@@ -195,16 +189,15 @@ export function FileUpload({
                 </div>
             )}
 
-            {/* Demo Mode Indicator */}
-            {/* {enableSpacesUpload && bucketName && (
+            {/* Bytescale Configuration Indicator */}
+            {/* {enableBytescaleUpload && (
                 <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
                     <p className="text-xs text-blue-700">
-                        📁 Uploading to: <span className="font-mono">{bucketName}</span>
-                        {folderName && <span>/{folderName}</span>}
+                        📁 Uploading to Bytescale: <span className="font-mono">{folderName || 'uploads'}</span>
                     </p>
                     <p className="text-xs text-blue-600 mt-1">
                         {maxFiles === 1 ? '📷 Single image upload' : `🖼️ Multiple images (max ${maxFiles})`} •
-                        💡 Configure DigitalOcean Spaces credentials in .env.local for real uploads
+                        💡 Configure Bytescale API key in .env.local for real uploads
                     </p>
                 </div>
             )} */}
@@ -213,7 +206,7 @@ export function FileUpload({
             {value.length > 0 && (
                 <div className="mt-4 space-y-2">
                     <p className="text-sm font-medium text-gray-700">Selected files:</p>
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-w-full">
                         {value.map((file, index) => {
                             const imagePreview = getImagePreview(file, index);
                             const isUploaded = uploadedFiles.some(result =>
@@ -223,9 +216,9 @@ export function FileUpload({
                             return (
                                 <div
                                     key={index}
-                                    className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                    className="flex items-start justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow max-w-full"
                                 >
-                                    <div className="flex items-center space-x-3">
+                                    <div className="flex items-start space-x-3 min-w-0 flex-1">
                                         {imagePreview ? (
                                             <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
                                                 <Image
@@ -241,33 +234,31 @@ export function FileUpload({
                                                 <File className="h-8 w-8 text-gray-400" />
                                             </div>
                                         )}
-                                        <div className="min-w-0 flex-1">
-                                            <p className="text-sm font-medium text-gray-900 truncate" title={file.name}>
+                                        <div className="min-w-0 flex-1 overflow-hidden">
+                                            <p className="text-sm font-medium text-gray-900 break-words" title={file.name}>
                                                 {file.name}
                                             </p>
-                                            <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                                            <p className="text-xs text-gray-500 mt-1">{formatFileSize(file.size)}</p>
                                             {imagePreview && (
-                                                <p className="text-xs text-green-600 font-medium">Image Preview</p>
+                                                <p className="text-xs text-green-600 font-medium mt-1">Image Preview</p>
                                             )}
-                                            {enableSpacesUpload && (
-                                                <div className="flex items-center space-x-1 mt-1">
+                                            {enableBytescaleUpload && (
+                                                <div className="flex items-center space-x-1 mt-2 flex-wrap">
                                                     {uploading ? (
                                                         <>
-                                                            <Cloud className="h-3 w-3 text-blue-500 animate-pulse" />
+                                                            <Cloud className="h-3 w-3 text-blue-500 animate-pulse flex-shrink-0" />
                                                             <span className="text-xs text-blue-600">Uploading... {uploadProgress}%</span>
                                                         </>
                                                     ) : isUploaded ? (
                                                         <>
-                                                            <CheckCircle className="h-3 w-3 text-green-500" />
-                                                            <span className="text-xs text-green-600">Uploaded to Spaces</span>
-                                                        </>
-                                                    ) : bucketName ? (
-                                                        <>
-                                                            <Cloud className="h-3 w-3 text-gray-400" />
-                                                            <span className="text-xs text-gray-500">Ready to upload</span>
+                                                            <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
+                                                            <span className="text-xs text-green-600">Uploaded to Bytescale</span>
                                                         </>
                                                     ) : (
-                                                        <span className="text-xs text-orange-500">Bucket name required</span>
+                                                        <>
+                                                            <Cloud className="h-3 w-3 text-gray-400 flex-shrink-0" />
+                                                            <span className="text-xs text-gray-500">Ready to upload</span>
+                                                        </>
                                                     )}
                                                 </div>
                                             )}
@@ -279,7 +270,7 @@ export function FileUpload({
                                         size="sm"
                                         onClick={() => removeFile(index)}
                                         disabled={disabled || uploading}
-                                        className="flex-shrink-0 text-gray-400 hover:text-red-500"
+                                        className="flex-shrink-0 text-gray-400 hover:text-red-500 ml-2"
                                     >
                                         <X className="h-4 w-4" />
                                     </Button>

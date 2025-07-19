@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { SpacesProvider } from "@/contexts/SpacesContext";
-import { UploadResult } from "@/lib/digitalocean-spaces";
+import { BytescaleProvider } from "@/contexts/BytescaleContext";
+import { BytescaleUploadResult } from "@/lib/bytescale";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { format } from "date-fns";
@@ -91,12 +91,12 @@ function HomePage() {
     }
   }
 
-  const handleUploadComplete = (results: UploadResult[]) => {
-    console.log('Photos uploaded to Spaces:', results);
+  const handleUploadComplete = (results: BytescaleUploadResult[]) => {
+    console.log('Photos uploaded to Bytescale:', results);
     // This is a generic handler, specific handlers will update state
   };
 
-  const handlePhotoUploadComplete = (results: UploadResult[]) => {
+  const handlePhotoUploadComplete = (results: BytescaleUploadResult[]) => {
     const urls = results
       .filter(result => result.success && result.url)
       .map(result => result.url!);
@@ -104,7 +104,7 @@ function HomePage() {
     handleUploadComplete(results);
   };
 
-  const handleLogoUploadComplete = (results: UploadResult[]) => {
+  const handleLogoUploadComplete = (results: BytescaleUploadResult[]) => {
     const urls = results
       .filter(result => result.success && result.url)
       .map(result => result.url!);
@@ -151,7 +151,7 @@ function HomePage() {
 
   return (
     <div className="flex flex-col items-center justify-center bg-orange-100 min-h-screen p-4">
-      <h1 className="text-4xl font-bold text-orange-500">Welcome to Mohotsav</h1>
+      <h1 className="text-4xl font-bold text-orange-500 text-center">Welcome to Mohotsav</h1>
       <p className="">Celebrating culture and community.</p>
 
       <Form {...form}>
@@ -463,9 +463,8 @@ function HomePage() {
                       accept={{
                         'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'],
                       }}
-                      enableSpacesUpload={true}
-                      bucketName="finrm-spaces"
-                      folderName="newfin/mahostav-uploads/mandal-logos"
+                      enableBytescaleUpload={true}
+                      folderName="mahostav-uploads/mandal-logos"
                       onUploadComplete={handleLogoUploadComplete}
                       onUploadError={handleUploadError}
                     />
@@ -491,9 +490,8 @@ function HomePage() {
                       accept={{
                         'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'],
                       }}
-                      enableSpacesUpload={true}
-                      bucketName="finrm-spaces"
-                      folderName="newfin/mahostav-uploads/gallery-photos"
+                      enableBytescaleUpload={true}
+                      folderName="mahostav-uploads/gallery-photos"
                       onUploadComplete={handlePhotoUploadComplete}
                       onUploadError={handleUploadError}
                     />
@@ -519,8 +517,8 @@ function HomePage() {
 
 export default function Home() {
   return (
-    <SpacesProvider>
+    <BytescaleProvider>
       <HomePage />
-    </SpacesProvider>
+    </BytescaleProvider>
   );
 }
