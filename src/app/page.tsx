@@ -80,7 +80,26 @@ function HomePage() {
       toast.success("Form submitted successfully!", {
         position: "top-center",
       });
-      form.reset();
+
+      // Reset form and all state
+      form.reset({
+        mandalOfficialName: "",
+        popularName: "",
+        pandalAddress: "",
+        googleMapsLink: "",
+        yearEstablished: "",
+        mandalHistory: "",
+        expectedAagman: undefined,
+        aagmanStartLocation: "",
+        isEcoFriendly: "",
+        primaryContactName: "",
+        primaryContactMobile: "",
+        publicEnquiryNumber: "",
+        websiteOrSocialLinks: "",
+        authorizingPerson: "",
+        mandalLogo: [],
+        highQualityPhotos: []
+      });
       setUploadedPhotoUrls([]);
       setUploadedLogoUrl("");
     } catch (error) {
@@ -669,7 +688,7 @@ function HomePage() {
                   </FormItem>
                 )}
               />
-              <div className="w-full bg-white p-4   rounded-t-2xl shadow-lg">
+              <div className="w-full bg-white p-4  rounded-t-2xl shadow-lg">
                 <Button
                   type="submit"
                   className="w-full bg-[#FF5D0D] text-white hover:bg-[#FF5D0D]/90"
