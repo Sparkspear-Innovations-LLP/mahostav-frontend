@@ -158,7 +158,7 @@ function HomePage() {
   }
 
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="relative w-full h-screen overflow-hidden">
       <Image
         src="/form_bg.png"
         alt="Background"
@@ -669,15 +669,15 @@ function HomePage() {
                   </FormItem>
                 )}
               />
-            </div>
-            <div className="w-full bg-white p-4   rounded-t-2xl shadow-lg">
-              <Button
-                type="submit"
-                className="w-full bg-[#FF5D0D] text-white hover:bg-[#FF5D0D]/90"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
+              <div className="w-full bg-white p-4   rounded-t-2xl shadow-lg">
+                <Button
+                  type="submit"
+                  className="w-full bg-[#FF5D0D] text-white hover:bg-[#FF5D0D]/90"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </Button>
+              </div>
             </div>
           </form>
         </Form>
